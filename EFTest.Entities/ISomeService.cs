@@ -12,13 +12,13 @@ namespace EFTest
     public interface ISomeService
     {
         //Sync
-        void Insert();
+        void Insert(string url);
         IEnumerable<Post> GetAll();
         IEnumerable<Post> GetAll(Expression<Func<Post, bool>> filter);
         Post FindById(int id);
 
         //Async
-        Task InsertAsync();
+        Task<bool> InsertAsync(string url);
         Task<IEnumerable<Post>> GetAllAsync();
         Task<Post> FindByIdAsync(int id);
     }

@@ -83,29 +83,29 @@ namespace EFTest.WithRepositories
            return await Task.Run(() => context.Get<T>().Count()); 
         }
 
-        public async Task<bool> AddAsync(T item)
+        public Task<bool> AddAsync(T item)
         {
-            return await Task.Run(() =>
+            return Task.Run(() =>
                 {
                     context.Add(item);
                     return true;
                 });
         }
 
-        public async Task<bool> ContainsAsync(T item)
+        public Task<bool> ContainsAsync(T item)
         {
-            return await Task.Run(() => context.Get<T>().FirstOrDefault(t => t == item) != null);
+            return Task.Run(() => context.Get<T>().FirstOrDefault(t => t == item) != null);
         }
 
-        public async Task<bool> RemoveAsync(T item)
+        public Task<bool> RemoveAsync(T item)
         {
-            return await Task.Run(() => context.Remove(item));
+            return Task.Run(() => context.Remove(item));
             
         }
 
-        public async Task<T> GetAsync(int id)
+        public Task<T> GetAsync(int id)
         {
-            return await Task.Run(() => context.Get<T>().SingleOrDefault(x => x.Id == id));
+            return Task.Run(() => context.Get<T>().SingleOrDefault(x => x.Id == id));
         }
 
         public async Task<T> GetIncludingAsync(int id, params Expression<Func<T, object>>[] includeProperties)
@@ -114,22 +114,22 @@ namespace EFTest.WithRepositories
             return await queryable.SingleOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<IQueryable<T>> GetAllAsync()
+        public Task<IQueryable<T>> GetAllAsync()
         {
-            return await Task.Run(() => context.Get<T>());
+            return Task.Run(() => context.Get<T>());
         }
 
-        public async Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>> predicate)
+        public Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>> predicate)
         {
-            return await Task.Run(() => context.Get<T>().Where(predicate).AsQueryable<T>());
+            return Task.Run(() => context.Get<T>().Where(predicate).AsQueryable<T>());
         }
 
         /// <summary>
         /// Used for Lazyloading navigation properties
         /// </summary>
-        public async Task<IQueryable<T>> GetAllIncludingAsync(params Expression<Func<T, object>>[] includeProperties)
+        public Task<IQueryable<T>> GetAllIncludingAsync(params Expression<Func<T, object>>[] includeProperties)
         {
-            return await Task.Run(
+            return Task.Run(
                 () =>
                 {
                     IQueryable<T> queryable = GetAll();

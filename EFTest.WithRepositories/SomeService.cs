@@ -24,12 +24,11 @@ namespace EFTest.WithRepositories
             this.repository = repository;
         }
 
-        public void Insert()
+        public void Insert(string url)
         {
-            Post post = new Post() { Url = string.Format("www.someurl{0}", counter++) };
+            Post post = new Post() { Url = url };
             post.PostComments.Add(new PostComment() { Comment = string.Format("yada yada {0}", counter++) });
             repository.Add(post);
-            context.Commit();
         }
 
         public IEnumerable<Post> GetAll()
@@ -48,13 +47,11 @@ namespace EFTest.WithRepositories
             return post;
         }
 
-        public async Task InsertAsync()
+        public Task<bool> InsertAsync(string url)
         {
-            Post post = new Post() { Url = string.Format("www.someurl{0}", counter++) };
+            Post post = new Post() { Url = url };
             post.PostComments.Add(new PostComment() { Comment = string.Format("yada yada {0}", counter++) });
-            await repository.AddAsync(post);
-            context.Commit();
-
+            return repository.AddAsync(post);
         }
 
         public async Task<IEnumerable<Post>> GetAllAsync()
@@ -62,10 +59,9 @@ namespace EFTest.WithRepositories
             return await repository.GetAllAsync();
         }
 
-        public async Task<Post> FindByIdAsync(int id)
+        public Task<Post> FindByIdAsync(int id)
         {
-            var post = await repository.GetIncludingAsync(id, x => x.PostComments);
-            return post;
+            return repository.GetIncludingAsync(id, x => x.PostComments);
 
         }
 

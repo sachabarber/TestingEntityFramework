@@ -11,8 +11,8 @@ namespace EFTest
 {
     class Program
     {
-       
-        public async void Run()
+
+        public async Task Run()
         {
 
             ////Non lazy service examples
@@ -29,7 +29,7 @@ namespace EFTest
             using (var scope = IOCManager.Instance.Container.BeginLifetimeScope())
             {
                 ISomeServiceLazy someServiceLazy = scope.Resolve<ISomeServiceLazy>();
-                await someServiceLazy.InsertAsync();
+                await someServiceLazy.InsertAsync(string.Format("EFTest {0}", DateTime.Now.ToLongTimeString()));
                 var posts = await someServiceLazy.GetAllAsync();
                 var postLast = await someServiceLazy.FindByIdAsync(posts.Last().Id);
             }
@@ -44,7 +44,7 @@ namespace EFTest
         static void Main(string[] args)
         {
             Program p = new Program();
-            p.Run();
+            p.Run().Wait();
         }
     }
 }

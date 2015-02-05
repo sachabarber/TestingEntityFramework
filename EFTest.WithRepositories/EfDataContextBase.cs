@@ -33,9 +33,9 @@ namespace EFTest.WithRepositories
             return true;
         }
 
-        public void Commit()
+        public new int SaveChanges()
         {
-            base.SaveChanges();
+            return base.SaveChanges();
         }
 
         public void Attach<T>(T obj) where T : class
@@ -46,6 +46,8 @@ namespace EFTest.WithRepositories
         public void Add<T>(T obj) where T : class
         {
             Set<T>().Add(obj);
+
+            
         }
     }
 }

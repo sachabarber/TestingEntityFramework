@@ -12,13 +12,13 @@ namespace EFTest
     public interface ISomeServiceLazy
     {
         //Sync
-        void Insert();
+        void Insert(string url);
         IEnumerable<PostLazy> GetAll();
         IEnumerable<PostLazy> GetAll(Expression<Func<PostLazy, bool>> filter);
         PostLazy FindById(int id);
 
         //Async
-        Task InsertAsync();
+        Task InsertAsync(string url);
         Task<IEnumerable<PostLazy>> GetAllAsync();
         Task<PostLazy> FindByIdAsync(int id);
     }

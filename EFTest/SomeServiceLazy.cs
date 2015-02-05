@@ -22,12 +22,11 @@ namespace EFTest
         }
 
 
-        public void Insert()
+        public void Insert(string url)
         {
-            PostLazy post = new PostLazy() { Url = string.Format("www.someurl{0}", counter++) };
+            PostLazy post = new PostLazy() { Url = url };
             post.PostComments.Add(new PostComment() { Comment = string.Format("yada yada {0}", counter++) });
             context.Posts.Add(post);
-            context.SaveChanges();
         }
 
         public IEnumerable<PostLazy> GetAll()
@@ -37,7 +36,7 @@ namespace EFTest
 
         public IEnumerable<PostLazy> GetAll(Expression<Func<PostLazy, bool>> filter)
         {
-            return context.Posts.Where(filter);
+            return context.Posts.Where(filter).AsEnumerable();
         }
 
         public PostLazy FindById(int id)
@@ -46,9 +45,9 @@ namespace EFTest
             return post;
         }
 
-        public async Task InsertAsync()
+        public async Task InsertAsync(string url)
         {
-            PostLazy post = new PostLazy() { Url = string.Format("www.someurl{0}", counter++) };
+            PostLazy post = new PostLazy() { Url = url };
             post.PostComments.Add(new PostComment() { Comment = string.Format("yada yada {0}", counter++) });
             context.Posts.Add(post);
             context.SaveChanges();

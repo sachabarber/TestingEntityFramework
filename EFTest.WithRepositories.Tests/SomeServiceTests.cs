@@ -19,10 +19,9 @@ namespace EFTest.WithRepositories.Tests
             Mock<IRepository<Post>> repoMock = new Mock<IRepository<Post>>();
 
             SomeService service = new SomeService(uowMock.Object, repoMock.Object);
-            service.Insert();
+            service.Insert("TestInsert");
 
             repoMock.Verify(m => m.Add(It.IsAny<Post>()), Times.Once());
-            uowMock.Verify(m => m.Commit(), Times.Once());
         }
 
 
@@ -117,10 +116,9 @@ namespace EFTest.WithRepositories.Tests
             repoMock.Setup(x => x.AddAsync(It.IsAny<Post>())).Returns(Task.FromResult(true));
 
             SomeService service = new SomeService(uowMock.Object, repoMock.Object);
-            await service.InsertAsync();
+            await service.InsertAsync("TestInsertAsync");
 
             repoMock.Verify(m => m.AddAsync(It.IsAny<Post>()), Times.Once());
-            uowMock.Verify(m => m.Commit(), Times.Once());
         }
 
 

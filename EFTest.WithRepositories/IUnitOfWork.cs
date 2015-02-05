@@ -8,7 +8,7 @@ namespace EFTest.WithRepositories
 {
     public interface IUnitOfWork : IDisposable
     {
-        void Commit();
+        int SaveChanges();
         void Attach<T>(T obj) where T : class;
         void Add<T>(T obj) where T : class;
         IQueryable<T> Get<T>() where T : class;

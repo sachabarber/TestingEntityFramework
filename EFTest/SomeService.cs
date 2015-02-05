@@ -22,12 +22,11 @@ namespace EFTest
         }
 
 
-        public void Insert()
+        public void Insert(string url)
         {
-            Post post = new Post() { Url = string.Format("www.someurl{0}", counter++) };
+            Post post = new Post() { Url = url };
             post.PostComments.Add(new PostComment() { Comment = string.Format("yada yada {0}", counter++) });
             context.Posts.Add(post);
-            context.SaveChanges();
         }
 
         public IEnumerable<Post> GetAll()
@@ -38,7 +37,7 @@ namespace EFTest
 
         public IEnumerable<Post> GetAll(Expression<Func<Post, bool>> filter)
         {
-            return context.Posts.Where(filter);
+            return context.Posts.Where(filter).AsEnumerable();
         }
 
         public Post FindById(int id)
@@ -55,12 +54,13 @@ namespace EFTest
             return post;
         }
 
-        public async Task InsertAsync()
+        public async Task<bool> InsertAsync(string url)
         {
-            Post post = new Post() { Url = string.Format("www.someurl{0}", counter++) };
+            Post post = new Post() { Url = url };
             post.PostComments.Add(new PostComment() { Comment = string.Format("yada yada {0}", counter++) });
             context.Posts.Add(post);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
+            return true;
         }
 
         public async Task<IEnumerable<Post>> GetAllAsync()
