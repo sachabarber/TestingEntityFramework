@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace EFTest.Entities
 {
-    public interface ISachaTestLazyContext : IDisposable
+    public interface ISachaContext : IDisposable
     {
-        DbSet<PostLazy> Posts { get; set; }
+        DbSet<Post> Posts { get; set; }
         int SaveChanges();
         Task<int> SaveChangesAsync();
+
 
         //hide the call to DbCOntext.Database behind an interface so it to, can be mocked
         void DoSomethingDirectlyWithDatabase();

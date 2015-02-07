@@ -13,10 +13,10 @@ namespace EFTest
 {
     public class SomeServiceLazy : ISomeServiceLazy, IDisposable
     {
-        private readonly ISachaTestLazyContext context;
+        private readonly ISachaLazyContext context;
         private int counter;
 
-        public SomeServiceLazy(ISachaTestLazyContext context)
+        public SomeServiceLazy(ISachaLazyContext context)
         {
             this.context = context;
         }

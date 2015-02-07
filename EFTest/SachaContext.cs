@@ -11,9 +11,9 @@ using EFTest.Entities;
 namespace EFTest
 {
 
-    public class SachaTestContext : DbContext, ISachaTestContext
+    public class SachaContext : DbContext, ISachaContext
     {
-        public SachaTestContext(string nameOrConnectionString)
+        public SachaContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
             this.Configuration.LazyLoadingEnabled = false;

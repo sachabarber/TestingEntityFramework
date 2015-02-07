@@ -25,13 +25,13 @@ namespace EFTest
             var builder = new ContainerBuilder();
  
             // Register individual components
-            builder.RegisterType<SachaTestContext>()
-               .As<ISachaTestContext>()
+            builder.RegisterType<SachaContext>()
+               .As<ISachaContext>()
                .WithParameter("nameOrConnectionString", "SachaTestContextConnection")
                .InstancePerLifetimeScope();
 
-            builder.RegisterType<SachaTestLazyContext>()
-               .As<ISachaTestLazyContext>()
+            builder.RegisterType<SachaLazyContext>()
+               .As<ISachaLazyContext>()
                .WithParameter("nameOrConnectionString", "SachaTestContextConnection")
                .InstancePerLifetimeScope();
 

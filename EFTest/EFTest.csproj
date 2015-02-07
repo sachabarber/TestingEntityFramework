@@ -55,8 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IOCManager.cs" />
-    <Compile Include="SachaTestLazyContext.cs" />
-    <Compile Include="SachaTestContext.cs" />
+    <Compile Include="SachaContext.cs" />
+    <Compile Include="SachaLazyContext.cs" />
     <Compile Include="SomeServiceLazy.cs" />
     <Compile Include="SomeService.cs" />
     <Compile Include="Program.cs" />

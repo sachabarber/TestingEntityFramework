@@ -11,9 +11,12 @@ using EFTest.Entities;
 namespace EFTest
 {
 
-    public class SachaTestLazyContext : DbContext, ISachaTestLazyContext
+    public class SachaLazyContext : DbContext, ISachaLazyContext
     {
-        public SachaTestLazyContext(string nameOrConnectionString)
+
+
+
+        public SachaLazyContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
             this.Configuration.LazyLoadingEnabled = true;

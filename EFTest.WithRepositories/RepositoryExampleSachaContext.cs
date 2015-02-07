@@ -10,7 +10,7 @@ using EFTest.Entities;
 
 namespace EFTest.WithRepositories
 {
-    public class RepositoryExampleSachaTestContext : EfDataContextBase, ISachaTestContext
+    public class RepositoryExampleSachaTestContext : EfDataContextBase, ISachaContext
     {
         public RepositoryExampleSachaTestContext(string nameOrConnectionString)
             : base(nameOrConnectionString)

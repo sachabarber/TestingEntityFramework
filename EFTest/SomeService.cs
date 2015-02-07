@@ -13,10 +13,10 @@ namespace EFTest
 {
     public class SomeService : ISomeService, IDisposable
     {
-        private readonly ISachaTestContext context;
+        private readonly ISachaContext context;
         private int counter;
 
-        public SomeService(ISachaTestContext context)
+        public SomeService(ISachaContext context)
         {
             this.context = context;
         }
@@ -59,7 +59,6 @@ namespace EFTest
             Post post = new Post() { Url = url };
             post.PostComments.Add(new PostComment() { Comment = string.Format("yada yada {0}", counter++) });
             context.Posts.Add(post);
-            await context.SaveChangesAsync();
             return true;
         }
 

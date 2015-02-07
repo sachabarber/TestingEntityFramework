@@ -49,8 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IEntity.cs" />
-    <Compile Include="ISachaTestLazyContext.cs" />
-    <Compile Include="ISachaTestContext.cs" />
+    <Compile Include="ISachaContext.cs" />
+    <Compile Include="ISachaLazyContext.cs" />
     <Compile Include="ISomeServiceLazy.cs" />
     <Compile Include="PostLazy.cs" />
     <Compile Include="Post.cs" />
