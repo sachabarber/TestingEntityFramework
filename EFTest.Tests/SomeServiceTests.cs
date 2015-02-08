@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Policy;
@@ -61,12 +62,14 @@ namespace EFTest.Tests
             var mockContext = new Mock<SachaContextTestDouble>();
             mockContext.Setup(c => c.Posts).Returns(dbsetMock.Object);
 
-
-
             var service = new SomeService(mockContext.Object);
-            var retrievedPosts = service.GetAll();
+            var retrievedPosts = service.GetAll().ToList();
 
-            CollectionAssert.AreEqual(posts.ToList(), retrievedPosts.ToList());
+            var postsList = posts.ToList();
+
+            Assert.AreEqual(posts.Count(), retrievedPosts.Count());
+            Assert.AreEqual(postsList[0].Url, retrievedPosts[0].Url);
+            Assert.AreEqual(postsList[4].Url, retrievedPosts[4].Url);
         }
 
         [TestCase]
@@ -101,8 +104,6 @@ namespace EFTest.Tests
             var retrievedPosts = service.GetAll(filter);
             CollectionAssert.AreEqual(posts.Where(func).ToList(), retrievedPosts.ToList());
         }
-
-
 
         [TestCase]
         public void TestFindById()
@@ -149,84 +150,100 @@ namespace EFTest.Tests
             Assert.AreEqual(retrievedPost.Id,1);
             Assert.IsNotNull(retrievedPost.PostComments);
             Assert.AreEqual(retrievedPost.PostComments.Count,1);
-            
-            
-
         }
 
+        [TestCase]
+        public async Task TestGetAllAsync()
+        {
+
+            var posts = Enumerable.Range(0, 5).Select(
+                x => new Post()
+                {
+                    Url = string.Format("www.someurl{0}", x)
+                }).AsQueryable();
 
 
-        //[TestCase]
-        //public async void TestInsertAsync()
-        //{
-        //    Mock<IUnitOfWork> uowMock = new Mock<IUnitOfWork>();
-        //    Mock<IRepository<Post>> repoMock = new Mock<IRepository<Post>>();
-        //    repoMock.Setup(x => x.AddAsync(It.IsAny<Post>())).Returns(Task.FromResult(true));
+            var dbsetMock = new Mock<DbSet<Post>>();
+            dbsetMock.As<IDbAsyncEnumerable<Post>>()
+                .Setup(m => m.GetAsyncEnumerator())
+                .Returns(new TestDbAsyncEnumerator<Post>(posts.GetEnumerator()));
 
-        //    SomeService service = new SomeService(uowMock.Object, repoMock.Object);
-        //    await service.InsertAsync();
+            dbsetMock.As<IQueryable<Post>>()
+                .Setup(m => m.Provider)
+                .Returns(new TestDbAsyncQueryProvider<Post>(posts.Provider));
 
-        //    repoMock.Verify(m => m.AddAsync(It.IsAny<Post>()), Times.Once());
-        //    uowMock.Verify(m => m.Commit(), Times.Once());
-        //}
+            dbsetMock.As<IQueryable<Post>>().Setup(m => m.Expression).Returns(posts.Expression);
+            dbsetMock.As<IQueryable<Post>>().Setup(m => m.ElementType).Returns(posts.ElementType);
+            dbsetMock.As<IQueryable<Post>>().Setup(m => m.GetEnumerator()).Returns(posts.GetEnumerator());
 
+            var mockContext = new Mock<SachaContextTestDouble>();
+            mockContext.Setup(c => c.Posts).Returns(dbsetMock.Object);
 
-        //[TestCase]
-        //public async void TestGetAllAsync()
-        //{
-        //    Mock<IUnitOfWork> uowMock = new Mock<IUnitOfWork>();
-        //    Mock<IRepository<Post>> repoMock = new Mock<IRepository<Post>>();
+            var service = new SomeService(mockContext.Object);
+            var retrievedPosts = await service.GetAllAsync();
 
-        //    var posts = Enumerable.Range(0, 5).Select(x => new Post()
-        //    {
-        //        Id = x,
-        //        Url = string.Format("www.someurl{0}", x)
-        //    }).ToList();
+            var postsList = posts.ToList();
 
-        //    repoMock.Setup(x => x.GetAllAsync()).Returns(Task.FromResult(posts.AsQueryable()));
+            Assert.AreEqual(posts.Count(), retrievedPosts.Count());
+            Assert.AreEqual(postsList[0].Url, retrievedPosts[0].Url);
+            Assert.AreEqual(postsList[4].Url, retrievedPosts[4].Url);
+        }
 
-        //    SomeService service = new SomeService(uowMock.Object, repoMock.Object);
-        //    var retrievedPosts = await service.GetAllAsync();
+        [TestCase]
+        public async Task TestFindByIdAsync()
+        {
+            var posts = Enumerable.Range(0, 5).Select(x => new Post()
+            {
+                Id = x,
+                Url = string.Format("www.someurl{0}", x)
+            }).ToList();
 
-        //    repoMock.Verify(m => m.GetAllAsync(), Times.Once());
+            for (int i = 0; i < posts.Count; i++)
+            {
+                posts[i].PostComments.Add(new PostComment()
+                {
+                    Comment = string.Format("some test comment {0}", i)
+                });
+            }
 
-        //    CollectionAssert.AreEqual(posts, retrievedPosts);
-        //}
+            var queryablePosts = posts.AsQueryable();
 
+            var dbsetMock = new Mock<DbSet<Post>>();
+            dbsetMock.As<IDbAsyncEnumerable<Post>>()
+                .Setup(m => m.GetAsyncEnumerator())
+                .Returns(new TestDbAsyncEnumerator<Post>(queryablePosts.GetEnumerator()));
 
+            dbsetMock.As<IQueryable<Post>>()
+                .Setup(m => m.Provider)
+                .Returns(new TestDbAsyncQueryProvider<Post>(queryablePosts.Provider));
 
-
-        //[TestCase]
-        //public async void TestFindByIdAsync()
-        //{
-        //    Mock<IUnitOfWork> uowMock = new Mock<IUnitOfWork>();
-        //    Mock<IRepository<Post>> repoMock = new Mock<IRepository<Post>>();
-
-        //    var posts = Enumerable.Range(0, 5).Select(x => new Post()
-        //    {
-        //        Id = x,
-        //        Url = string.Format("www.someurl{0}", x)
-        //    }).ToList();
-
-        //    for (int i = 0; i < posts.Count; i++)
-        //    {
-        //        posts[i].PostComments.Add(new PostComment() { Comment = string.Format("some test comment {0}", i) });
-        //    }
-
-        //    repoMock.Setup(moq => moq.GetIncludingAsync(
-        //                It.IsInRange(0, 5, Range.Inclusive), 
-        //                new[] { It.IsAny<Expression<Func<Post, object>>>() }))
-        //            .Returns(
-        //                (int id, Expression<Func<Post, object>>[] includes) => 
-        //                    Task.FromResult(posts.SingleOrDefault(x => x.Id == id)));
+            dbsetMock.As<IQueryable<Post>>().Setup(m => m.Expression).Returns(queryablePosts.Expression);
+            dbsetMock.As<IQueryable<Post>>().Setup(m => m.ElementType).Returns(queryablePosts.ElementType);
+            dbsetMock.As<IQueryable<Post>>().Setup(m => m.GetEnumerator()).Returns(queryablePosts.GetEnumerator());
 
 
-        //    SomeService service = new SomeService(uowMock.Object, repoMock.Object);
-        //    var retrievedPost = await service.FindByIdAsync(2);
+            //NOTE : we need to use the string version of Include as the other one that accepts
+            //       an Expression tree is an extension method in System.Data.Entity.QueryableExtensions
+            //       which Moq doesn't like
+            //
+            // So the following will not work, as will result in this sort of Exception from Moq
+            //
+            //       Expression references a method that does not belong to 
+            //       the mocked object: m => m.Include<Post,IEnumerable`1>(It.IsAny<Expression`1>())
+            //
+            // dbsetMock.Setup(m => m.Include(It.IsAny<Expression<Func<Post,IEnumerable<PostComment>>>>()))
+            //       .Returns(dbsetMock.Object);
+            dbsetMock.Setup(m => m.Include("PostComments")).Returns(dbsetMock.Object);
 
+            var mockContext = new Mock<SachaContextTestDouble>();
+            mockContext.Setup(c => c.Posts).Returns(dbsetMock.Object);
 
-        //    Assert.AreEqual(2, retrievedPost.Id);
-        //}
+            var service = new SomeService(mockContext.Object);
+            var retrievedPost = await service.FindByIdAsync(1);
 
+            Assert.AreEqual(retrievedPost.Id, 1);
+            Assert.IsNotNull(retrievedPost.PostComments);
+            Assert.AreEqual(retrievedPost.PostComments.Count, 1);
+        }
     }
 }

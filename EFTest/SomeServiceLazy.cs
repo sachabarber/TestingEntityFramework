@@ -53,10 +53,11 @@ namespace EFTest
             context.SaveChanges();
         }
 
-        public async Task<IEnumerable<PostLazy>> GetAllAsync()
+        public async Task<List<PostLazy>> GetAllAsync()
         {
-            return context.Posts.AsEnumerable();
+            return await context.Posts.ToListAsync();
         }
+
 
         public async Task<PostLazy> FindByIdAsync(int id)
         {

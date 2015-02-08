@@ -54,9 +54,10 @@ namespace EFTest.WithRepositories
             return repository.AddAsync(post);
         }
 
-        public async Task<IEnumerable<Post>> GetAllAsync()
+        public async Task<List<Post>> GetAllAsync()
         {
-            return await repository.GetAllAsync();
+            var posts = await repository.GetAllAsync();
+            return posts.ToList();
         }
 
         public Task<Post> FindByIdAsync(int id)

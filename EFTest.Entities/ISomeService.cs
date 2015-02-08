@@ -19,7 +19,7 @@ namespace EFTest
 
         //Async
         Task<bool> InsertAsync(string url);
-        Task<IEnumerable<Post>> GetAllAsync();
+        Task<List<Post>> GetAllAsync();
         Task<Post> FindByIdAsync(int id);
     }
 }

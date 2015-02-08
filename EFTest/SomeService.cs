@@ -62,9 +62,9 @@ namespace EFTest
             return true;
         }
 
-        public async Task<IEnumerable<Post>> GetAllAsync()
+        public async Task<List<Post>> GetAllAsync()
         {
-            return context.Posts.AsEnumerable();
+            return await context.Posts.ToListAsync(); 
         }
 
 
@@ -75,10 +75,10 @@ namespace EFTest
             //var post1 = context.Posts.FirstOrDefault(p => p.Id == id);
 
             //This should show that we are not doing Lazy Loading and DO NEED to use Include for navigation properties
-            var postWithNoCommentsProof = context.Posts.FirstOrDefault();
-            var postWithCommentsThanksToInclude = context.Posts.Include(x => x.PostComments).FirstOrDefault();
+            var postWithNoCommentsProof = await context.Posts.FirstOrDefaultAsync();
+            var postWithCommentsThanksToInclude = await context.Posts.Include(x => x.PostComments).FirstOrDefaultAsync();
 
-            var post = context.Posts.Where(p => p.Id == id).Include(x => x.PostComments).FirstOrDefault();
+            var post = await context.Posts.Where(p => p.Id == id).Include(x => x.PostComments).FirstOrDefaultAsync();
             return post;
         }
 
