@@ -16,6 +16,7 @@ namespace EFTest.Tests
     /// <summary>
     /// This MSDN pages talks about how the EF team have made EF more testable
     /// https://msdn.microsoft.com/en-us/data/dn314429
+    /// You should make sure to check it out
     /// </summary>
     [TestFixture]
     public class SomeServiceTests
