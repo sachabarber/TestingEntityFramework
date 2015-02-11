@@ -27,7 +27,10 @@ namespace EFTest.WithRepositories
         public void Insert(string url)
         {
             Post post = new Post() { Url = url };
-            post.PostComments.Add(new PostComment() { Comment = string.Format("yada yada {0}", counter++) });
+            post.PostComments.Add(new PostComment()
+            {
+                Comment = string.Format("yada yada {0}", counter++)
+            });
             repository.Add(post);
         }
 
@@ -50,7 +53,10 @@ namespace EFTest.WithRepositories
         public Task<bool> InsertAsync(string url)
         {
             Post post = new Post() { Url = url };
-            post.PostComments.Add(new PostComment() { Comment = string.Format("yada yada {0}", counter++) });
+            post.PostComments.Add(new PostComment()
+            {
+                Comment = string.Format("yada yada {0}", counter++)
+            });
             return repository.AddAsync(post);
         }
 

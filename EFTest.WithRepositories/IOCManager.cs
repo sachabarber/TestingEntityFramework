@@ -26,17 +26,17 @@ namespace EFTest.WithRepositories
 
             // Register individual components
             builder.RegisterType<RepositoryExampleSachaTestContext>()
-               .As<IUnitOfWork>()
-               .WithParameter("nameOrConnectionString", "SachaTestContextConnection")
-               .InstancePerLifetimeScope();
+                .As<IUnitOfWork>()
+                .WithParameter("nameOrConnectionString", "SachaTestContextConnection")
+                .InstancePerLifetimeScope();
 
             builder.RegisterType<SomeService>()
-               .As<ISomeService>().InstancePerLifetimeScope();
+                .As<ISomeService>().InstancePerLifetimeScope();
 
 
             builder.RegisterGeneric(typeof(Repository<>))
-               .As(typeof(IRepository<>))
-               .InstancePerLifetimeScope();
+                .As(typeof(IRepository<>))
+                .InstancePerLifetimeScope();
 
 
 

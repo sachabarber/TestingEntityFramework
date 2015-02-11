@@ -46,7 +46,9 @@ namespace EFTest.WithRepositories
             return context.Get<T>().SingleOrDefault(x => x.Id == id);
         }
 
-        public T GetIncluding(int id, params Expression<Func<T, object>>[] includeProperties)
+        public T GetIncluding(
+            int id, 
+            params Expression<Func<T, object>>[] includeProperties)
         {
             return GetAllIncluding(includeProperties).SingleOrDefault(x => x.Id == id);
         }
@@ -65,7 +67,8 @@ namespace EFTest.WithRepositories
         /// <summary>
         /// Used for Lazyloading navigation properties
         /// </summary>
-        public IQueryable<T> GetAllIncluding(params Expression<Func<T, object>>[] includeProperties)
+        public IQueryable<T> GetAllIncluding(
+            params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> queryable = GetAll();
             foreach (Expression<Func<T, object>> includeProperty in includeProperties)
@@ -80,7 +83,7 @@ namespace EFTest.WithRepositories
         #region Async
         public async Task<int> CountAsync()
         {
-           return await Task.Run(() => context.Get<T>().Count()); 
+            return await Task.Run(() => context.Get<T>().Count()); 
         }
 
         public Task<bool> AddAsync(T item)
@@ -94,7 +97,8 @@ namespace EFTest.WithRepositories
 
         public Task<bool> ContainsAsync(T item)
         {
-            return Task.Run(() => context.Get<T>().FirstOrDefault(t => t == item) != null);
+            return Task.Run(
+                () => context.Get<T>().FirstOrDefault(t => t == item) != null);
         }
 
         public Task<bool> RemoveAsync(T item)
@@ -105,10 +109,13 @@ namespace EFTest.WithRepositories
 
         public Task<T> GetAsync(int id)
         {
-            return Task.Run(() => context.Get<T>().SingleOrDefault(x => x.Id == id));
+            return Task.Run(
+                () => context.Get<T>().SingleOrDefault(x => x.Id == id));
         }
 
-        public async Task<T> GetIncludingAsync(int id, params Expression<Func<T, object>>[] includeProperties)
+        public async Task<T> GetIncludingAsync(
+            int id, 
+            params Expression<Func<T, object>>[] includeProperties)
         {
             IQueryable<T> queryable = await GetAllIncludingAsync(includeProperties);
             return await queryable.SingleOrDefaultAsync(x => x.Id == id);
@@ -119,15 +126,18 @@ namespace EFTest.WithRepositories
             return Task.Run(() => context.Get<T>());
         }
 
-        public Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>> predicate)
+        public Task<IQueryable<T>> GetAllAsync(
+            Expression<Func<T, bool>> predicate)
         {
-            return Task.Run(() => context.Get<T>().Where(predicate).AsQueryable<T>());
+            return Task.Run(() => 
+                context.Get<T>().Where(predicate).AsQueryable<T>());
         }
 
         /// <summary>
         /// Used for Lazyloading navigation properties
         /// </summary>
-        public Task<IQueryable<T>> GetAllIncludingAsync(params Expression<Func<T, object>>[] includeProperties)
+        public Task<IQueryable<T>> GetAllIncludingAsync(
+            params Expression<Func<T, object>>[] includeProperties)
         {
             return Task.Run(
                 () =>

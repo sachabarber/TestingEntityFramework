@@ -25,7 +25,10 @@ namespace EFTest
         public void Insert(string url)
         {
             Post post = new Post() { Url = url };
-            post.PostComments.Add(new PostComment() { Comment = string.Format("yada yada {0}", counter++) });
+            post.PostComments.Add(new PostComment()
+            {
+                Comment = string.Format("yada yada {0}", counter++)
+            });
             context.Posts.Add(post);
         }
 
@@ -42,22 +45,29 @@ namespace EFTest
 
         public Post FindById(int id)
         {
-            //NOTE : Even if you included a line like the one below it would include the PostComments, which seems to be NonLazy
+            //NOTE : Even if you included a line like the one below it would include 
+            //the PostComments, which seems to be NonLazy
             //this is due to the fact that the Post(s) and Comment(s) are already in the Context
             //var post1 = context.Posts.FirstOrDefault(p => p.Id == id);
 
-            //This should show that we are not doing Lazy Loading and DO NEED to use Include for navigation properties
+            //This should show that we are not doing Lazy Loading and DO NEED to use 
+            //Include for navigation properties
             var postWithNoCommentsProof = context.Posts.FirstOrDefault();
-            var postWithCommentsThanksToInclude = context.Posts.Include(x => x.PostComments).FirstOrDefault();
+            var postWithCommentsThanksToInclude = context.Posts
+                .Include(x => x.PostComments).FirstOrDefault();
 
-            var post = context.Posts.Where(p => p.Id == id).Include(x => x.PostComments).FirstOrDefault();
+            var post = context.Posts.Where(p => p.Id == id)
+                .Include(x => x.PostComments).FirstOrDefault();
             return post;
         }
 
         public async Task<bool> InsertAsync(string url)
         {
             Post post = new Post() { Url = url };
-            post.PostComments.Add(new PostComment() { Comment = string.Format("yada yada {0}", counter++) });
+            post.PostComments.Add(new PostComment()
+            {
+                Comment = string.Format("yada yada {0}", counter++)
+            });
             context.Posts.Add(post);
             return true;
         }
@@ -70,15 +80,19 @@ namespace EFTest
 
         public async Task<Post> FindByIdAsync(int id)
         {
-            //NOTE : Even if you included a line like the one below it would include the PostComments, which seems to be NonLazy
+            //NOTE : Even if you included a line like the one below it would include 
+            //the PostComments, which seems to be NonLazy
             //this is due to the fact that the Post(s) and Comment(s) are already in the Context
             //var post1 = context.Posts.FirstOrDefault(p => p.Id == id);
 
-            //This should show that we are not doing Lazy Loading and DO NEED to use Include for navigation properties
+            //This should show that we are not doing Lazy Loading and DO NEED to use 
+            //Include for navigation properties
             var postWithNoCommentsProof = await context.Posts.FirstOrDefaultAsync();
-            var postWithCommentsThanksToInclude = await context.Posts.Include(x => x.PostComments).FirstOrDefaultAsync();
+            var postWithCommentsThanksToInclude = await context.Posts
+                .Include(x => x.PostComments).FirstOrDefaultAsync();
 
-            var post = await context.Posts.Where(p => p.Id == id).Include(x => x.PostComments).FirstOrDefaultAsync();
+            var post = await context.Posts.Where(p => p.Id == id)
+                .Include(x => x.PostComments).FirstOrDefaultAsync();
             return post;
         }
 
